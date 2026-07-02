@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>OS Merchandiser Form</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0ede8;color:#111;font-size:16px}
+header{background:#1a3e8c;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:9}
+header h1{font-size:17px;font-weight:700}
+header p{font-size:12px;opacity:.7;margin-top:2px}
+.wrap{max-width:480px;margin:0 auto;padding:14px 12px 100px}
+.card{background:#fff;border-radius:10px;margin-bottom:14px;overflow:hidden;border:1px solid #ddd}
+.card-title{padding:12px 14px;font-size:14px;font-weight:700;background:#f8f8f6;border-bottom:1px solid #eee}
+.card-body{padding:14px}
+.fld{margin-bottom:12px}
+.fld:last-child{margin-bottom:0}
+.fld label{display:block;font-size:12px;font-weight:700;color:#555;margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em}
+.req{color:#c4351a}
+.fld input,.fld select{display:block;width:100%;padding:12px;border:1.5px solid #ccc;border-radius:8px;font-size:16px;font-family:Arial,sans-serif;background:#fff;color:#111;-webkit-appearance:none}
+.fld select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23555' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+.fld input:focus,.fld select:focus{border-color:#1a3e8c;outline:none}
+.fld input[readonly]{background:#f0ede8;color:#777}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gps-row{display:flex;gap:8px}
+.gps-row input{flex:1}
+.gps-btn{padding:12px 14px;background:#1a3e8c;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.hint{font-size:12px;color:#888;margin-top:4px}
+.sku-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid #f0ede8}
+.sku-row:last-child{border-bottom:none}
+.sku-label{font-size:14px;font-weight:500}
+.sku-inp{width:85px;padding:10px;border:1.5px solid #ccc;border-radius:8px;font-size:17px;text-align:center;font-family:monospace}
+.yn{display:flex;gap:10px}
+.yn-btn{flex:1;padding:13px;border:1.5px solid #ccc;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;background:#fff;color:#888;font-family:Arial,sans-serif}
+.yn-btn.Y{border-color:#1a8a5a;background:#e8f5ee;color:#1a8a5a}
+.yn-btn.N{border-color:#c4351a;background:#fdeee8;color:#c4351a}
+.photo-btns{display:flex;gap:10px;margin-bottom:12px}
+.pbtn{flex:1;padding:13px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;border:none}
+.pbtn.cam{background:#1a3e8c;color:#fff}
+.pbtn.gal{background:#fff;color:#1a3e8c;border:2px solid #1a3e8c}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+.pslot{border:2px dashed #ccc;border-radius:8px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fafaf8;position:relative;overflow:hidden;cursor:pointer}
+.pslot.ok{border:2px solid #1a8a5a}
+.pslot img{width:100%;height:100%;object-fit:cover}
+.pslot .xi{position:absolute;top:4px;right:4px;width:24px;height:24px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.pcnt{font-size:12px;color:#888;text-align:center}
+.errmsg{background:#fdeee8;color:#c4351a;border:1px solid #f0c0b0;border-radius:8px;padding:12px;font-size:14px;margin-bottom:12px;display:none}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;padding:12px 14px}
+.sub{display:block;width:100%;padding:16px;background:#1a3e8c;color:#fff;border:none;border-radius:8px;font-size:17px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif}
+.ov{display:none;position:fixed;inset:0;background:rgba(255,255,255,.9);z-index:99;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.ov.on{display:flex}
+.spin{width:40px;height:40px;border:3px solid #eee;border-top-color:#1a3e8c;border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+#suc{display:none;text-align:center;padding:60px 16px}
+#suc .si{font-size:64px;margin-bottom:16px}
+#suc h2{font-size:22px;font-weight:700;margin-bottom:8px}
+#suc p{color:#666;font-size:14px;margin-bottom:28px;line-height:1.6}
+#suc button{padding:14px 32px;background:#1a3e8c;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif}
+</style>
+</head>
+<body>
+<header><h1>Open Secret</h1><p>Merchandiser SOH Form</p></header>
+<div class="ov" id="ov"><div class="spin"></div><p>Submitting...</p></div>
+<div class="wrap">
+<div id="frm">
+<div class="errmsg" id="em"></div>
+<div class="card">
+  <div class="card-title">Visit Details</div>
+  <div class="card-body">
+    <div class="row2">
+      <div class="fld"><label>Date <span class="req">*</span></label><input type="date" id="D_date"></div>
+      <div class="fld"><label>Time</label><input type="time" id="D_time"></div>
+    </div>
+    <div class="fld">
+      <label>GPS Location</label>
+      <div class="gps-row">
+        <input type="text" id="D_loc" readonly placeholder="Tap to get location">
+        <button class="gps-btn" onclick="doGPS()">Refresh</button>
+      </div>
+      <input type="hidden" id="D_lat"><input type="hidden" id="D_lng">
+      <div class="hint" id="gps_hint">Tap Refresh to fetch your location</div>
+    </div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title">Merchandiser and Store</div>
+  <div class="card-body">
+    <div class="fld"><label>Your Name <span class="req">*</span></label>
+      <select id="D_merc">
+        <option value="">-- Select name --</option>
+        <option>Amit</option><option>Amol</option><option>Bharath</option><option>Dev</option>
+        <option>Harsali</option><option>Jitendra</option><option>Kiran</option><option>Sagar</option>
+        <option>Satish</option><option>Subhankar Sengupta</option><option>Suman</option>
+        <option>Others</option>
+      </select>
+    </div>
+    <div class="fld" id="mof" style="display:none"><label>Your Name <span class="req">*</span></label><input type="text" id="D_mo" placeholder="Type your name"></div>
+    <div class="fld"><label>Store Name <span class="req">*</span></label>
+      <select id="D_store"><option value="">-- Select name first --</option></select>
+    </div>
+    <div class="fld" id="sof" style="display:none"><label>Store Name <span class="req">*</span></label><input type="text" id="D_so" placeholder="Type store name"></div>
+    <div class="fld"><label>Store Code</label><input type="text" id="D_code" readonly placeholder="Auto-filled"></div>
+    <div class="row2">
+      <div class="fld"><label>City</label><input type="text" id="D_city" readonly placeholder="Auto-filled"></div>
+      <div class="fld"><label>State</label><input type="text" id="D_state" readonly placeholder="Auto-filled"></div>
+    </div>
+    <div id="csof" style="display:none" class="row2">
+      <div class="fld"><label>City <span class="req">*</span></label><input type="text" id="D_cito" placeholder="City"></div>
+      <div class="fld"><label>State <span class="req">*</span></label><input type="text" id="D_stao" placeholder="State"></div>
+    </div>
+    <div class="fld"><label>Store Manager Name</label><input type="text" id="D_mgn" placeholder="Manager name"></div>
+    <div class="fld"><label>Store Manager Contact</label><input type="tel" id="D_mgc" placeholder="10-digit number" maxlength="10"></div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title">Stock Available?</div>
+  <div class="card-body">
+    <div class="fld"><label>Stock Available <span class="req">*</span></label>
+      <div class="yn"><button class="yn-btn" id="sa_y" onclick="setYN('stock','Yes')">Yes</button><button class="yn-btn" id="sa_n" onclick="setYN('stock','No')">No</button></div>
+      <input type="hidden" id="D_stock">
+    </div>
+  </div>
+</div>
+<div class="card" id="sohC" style="display:none">
+  <div class="card-title">Stock on Hand (SOH)</div>
+  <div class="card-body">
+    <div class="sku-row"><div class="sku-label">Digestive Biscuit</div><input class="sku-inp" type="number" id="D_s1" min="0" value="0"></div>
+    <div class="sku-row"><div class="sku-label">Jeera Biscuit</div><input class="sku-inp" type="number" id="D_s2" min="0" value="0"></div>
+    <div class="sku-row"><div class="sku-label">Chocolate Biscuit</div><input class="sku-inp" type="number" id="D_s3" min="0" value="0"></div>
+    <div class="sku-row"><div class="sku-label">Assorted Story Box</div><input class="sku-inp" type="number" id="D_s4" min="0" value="0"></div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title">Price Tag</div>
+  <div class="card-body">
+    <div class="fld"><label>Price Correct <span class="req">*</span></label>
+      <div class="yn"><button class="yn-btn" id="pr_y" onclick="setYN('price','Yes')">Yes</button><button class="yn-btn" id="pr_n" onclick="setYN('price','No')">No</button></div>
+      <input type="hidden" id="D_price">
+    </div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title">Proof Photos (min 1 required)</div>
+  <div class="card-body">
+    <input type="file" id="ci" accept="image/*" capture="environment" style="display:none">
+    <input type="file" id="gi" accept="image/*" style="display:none">
+    <div class="photo-btns">
+      <button class="pbtn cam" onclick="document.getElementById('ci').click()">Camera</button>
+      <button class="pbtn gal" onclick="document.getElementById('gi').click()">Gallery</button>
+    </div>
+    <div class="pgrid" id="pg"></div>
+    <div class="pcnt" id="pc">0 of 4 photos</div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title">Visibility</div>
+  <div class="card-body">
+    <div class="fld"><label>Shelf Position <span class="req">*</span></label>
+      <select id="D_vis">
+        <option value="">-- Select --</option>
+        <option>Shelf 1</option><option>Shelf 2</option><option>Shelf 3</option><option>Shelf 4</option><option>Shelf 5</option><option>Others</option>
+      </select>
+    </div>
+    <div class="fld" id="vof" style="display:none"><label>Specify</label><input type="text" id="D_viso" placeholder="e.g. End cap"></div>
+    <div class="fld"><label>3 Facing Digestive? <span class="req">*</span></label>
+      <div class="yn"><button class="yn-btn" id="fc_y" onclick="setYN('facing','Yes')">Yes</button><button class="yn-btn" id="fc_n" onclick="setYN('facing','No')">No</button></div>
+      <input type="hidden" id="D_facing">
+    </div>
+    <div class="fld" id="facingNumF" style="display:none"><label>How many facings? <span class="req">*</span></label><input type="number" id="D_facingNum" min="0" placeholder="Enter number of facings"></div>
+    <div class="fld"><label>Digestive and Jeera Next to Each Other? <span class="req">*</span></label>
+      <div class="yn"><button class="yn-btn" id="adj_y" onclick="setYN('adj','Yes')">Yes</button><button class="yn-btn" id="adj_n" onclick="setYN('adj','No')">No</button></div>
+      <input type="hidden" id="D_adj">
+    </div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title">Compliance</div>
+  <div class="card-body">
+    <div class="fld"><label>Compliance Level <span class="req">*</span></label>
+      <select id="D_comp">
+        <option value="">-- Select --</option>
+        <option>None</option><option>Minor</option>
+      </select>
+    </div>
+    <div class="fld"><label>Remarks</label><input type="text" id="D_rem" placeholder="Optional notes"></div>
+  </div>
+</div>
+</div>
+<div id="suc">
+  <div class="si">&#x2705;</div>
+  <h2>Submitted!</h2>
+  <p id="sm">Entry saved successfully.</p>
+  <button onclick="doReset()">Submit Another</button>
+</div>
+</div>
+<div class="footer"><button class="sub" id="subBtn">Submit SOH Entry</button></div>
+<script>
+var URL = 'https://script.google.com/macros/s/AKfycbx4_9QtruW6X3dLUkry6P2kM20A3Gu8cpgmWgqfSpDkTLX2M0MpTKywnRufFzeQWimNxA/exec';
+var S = {"Amit":[{"c":"6208","n":"Almonte-Khardi Bypas","ci":"Pune","st":"Maharashtra"},{"c":"6209","n":"Tain Sqr-Fatima Ngr","ci":"Pune","st":"Maharashtra"},{"c":"6219","n":"AUNDH","ci":"Pune","st":"Maharashtra"},{"c":"6719","n":"Erandwane","ci":"Pune","st":"Maharashtra"},{"c":"FRAF","n":"smart bazar-PUNE-AMANORA PARK-TOWN CENTER","ci":"Pune","st":"Maharashtra"},{"c":"FRAG","n":"smart bazar-PUNE-KOTHRUD-CITY PRIDE MUL","ci":"Pune","st":"Maharashtra"},{"c":"FRAH","n":"smart bazar-PUNE-KUMAR PACIFIC MALL","ci":"Pune","st":"Maharashtra"},{"c":"FRAI","n":"smart bazar-PUNE-PIMPRI-PREMIER PLAZA","ci":"Pune","st":"Maharashtra"},{"c":"FRAJ","n":"smart bazar-PUNE-VISHRANTWADI-ALANDI ROAD","ci":"Pune","st":"Maharashtra"},{"c":"TDE3","n":"Undri","ci":"Pune","st":"Maharashtra"},{"c":"TGC1","n":"Vision Flora Pimple Saudagar","ci":"Pune","st":"Maharashtra"},{"c":"TGL3","n":"RRL Smart Kalate Bldg Wakad Pune","ci":"Pune","st":"Maharashtra"},{"c":"TKX8","n":"Vishal Capital Chakan","ci":"Pune","st":"Maharashtra"},{"c":"TMN0","n":"Smart Moshi","ci":"Pune","st":"Maharashtra"},{"c":"TNP8","n":"Smart Manjri Budruk Pune","ci":"Pune","st":"Maharashtra"},{"c":"TOG7","n":"Smart Platinum Towers Kharadi","ci":"Pune","st":"Maharashtra"},{"c":"TPT7","n":"Smart Shantai City Center Talegaon","ci":"Pune","st":"Maharashtra"},{"c":"TX40","n":"Elpro Chinchwad","ci":"Pune","st":"Maharashtra"},{"c":"TXQV","n":"SmartNet Dr. Dayma Property","ci":"Pune","st":"Maharashtra"},{"c":"TZ53","n":"One Mall","ci":"Pune","st":"Maharashtra"},{"c":"TZ55","n":"Jagtap Property Pimple Gurav","ci":"Pune","st":"Maharashtra"}],"Amol":[{"c":"3119","n":"SB AGAR BAZAR","ci":"Mumbai","st":"Maharashtra"},{"c":"6220","n":"Phoenix Market City","ci":"Mumbai","st":"Maharashtra"},{"c":"TI76","n":"Chandra Mall","ci":"Mumbai","st":"Maharashtra"},{"c":"TM95","n":"Sai Krupa Kharghar","ci":"Mumbai","st":"Maharashtra"},{"c":"TMZ9","n":"Nisarg Greens Ambernath","ci":"Mumbai","st":"Maharashtra"},{"c":"TOJ6","n":"Smart R City Mall Ghatkopar","ci":"Mumbai","st":"Maharashtra"},{"c":"TQ59","n":"Smart GoodLife Boisar","ci":"Mumbai","st":"Maharashtra"},{"c":"TQ60","n":"Vertex Khadapada","ci":"Mumbai","st":"Maharashtra"},{"c":"FR00","n":"smart bazar-DOMBIVILI-LODHA EXPERIA MALL","ci":"Mumbai","st":"Maharashtra"},{"c":"4026","n":"Bhopar Dombivli DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4019","n":"Mulund DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4020","n":"New Panvel DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4067","n":"Chembur Central Mumbai DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4048","n":"Panvel Highway DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4016","n":"Seawoods DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4017","n":"Thane Garden Estate DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4040","n":"Kanjurmarg Mumbai DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4022","n":"Airoli DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"FR07","n":"smart bazar-NAVI MUMBAI-PANVEL-ORION MA","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"FR08","n":"smart bazar-NAVI MUMBAI-SEAWOODS","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"FR22","n":"HYPERCITY-NAVI MUMBAI-INORBIT MALLS","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"TCM3","n":"Smart Sunteck Airoli","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"TFP9","n":"Om Namah Shivay Karanjade","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"FR11","n":"smart bazar-THANE-DAHISAR-THAKUR MALL","ci":"Thane","st":"Maharashtra"},{"c":"FR14","n":"smart bazar-THANE-KALYAN-NETIVALI VILLA","ci":"Thane","st":"Maharashtra"},{"c":"T188","n":"SMT MUM  Dombivali (W)","ci":"Thane","st":"Maharashtra"},{"c":"TAFW","n":"Smart R Mall Thane","ci":"Thane","st":"Maharashtra"},{"c":"TAJF","n":"Smart Badlapur West","ci":"Thane","st":"Maharashtra"},{"c":"TOM0","n":"Korum Mall","ci":"Thane","st":"Maharashtra"},{"c":"TZ6V","n":"SMT MH  Concept A","ci":"Thane","st":"Maharashtra"},{"c":"TZ6W","n":"Smart Thanekar Palasia","ci":"Thane","st":"Maharashtra"},{"c":"FR15","n":"smart bazar-THANE-VIVA CITY MALL","ci":"Thane","st":"Maharashtra"}],"Bharath":[{"c":"6225","n":"Vijaynagar TTMC","ci":"Bangalore","st":"Karnataka"},{"c":"FR43","n":"smart bazar-BENGALURU-VB COLONY-ED","ci":"Bangalore","st":"Karnataka"},{"c":"FR44","n":"smart bazar-BANGALURU-JPNAGAR 7TH PHASE","ci":"Bangalore","st":"Karnataka"},{"c":"FR45","n":"smart bazar-BANGALURU-BANSHANKARI-KATHR","ci":"Bangalore","st":"Karnataka"},{"c":"FR47","n":"smart bazar-BANGALURU-GATEWAY JAYANAGAR","ci":"Bangalore","st":"Karnataka"},{"c":"FR48","n":"smart bazar-BENGALURU-MALLESHWARAM","ci":"Bangalore","st":"Karnataka"},{"c":"FR49","n":"smart bazar-BENGALURU-RAJAJI NAGAR","ci":"Bangalore","st":"Karnataka"},{"c":"TD8B","n":"SMT MKT KN Blr Shantinagar","ci":"Bangalore","st":"Karnataka"},{"c":"TFU5","n":"Vikhyath K.R Puram","ci":"Bangalore","st":"Karnataka"},{"c":"TKN2","n":"Chandapura","ci":"Bangalore","st":"Karnataka"},{"c":"TLI7","n":"Smart Electronic city Bangalore","ci":"Bangalore","st":"Karnataka"},{"c":"TR28","n":"Shivananjaiah Malagala Rd","ci":"Bangalore","st":"Karnataka"},{"c":"5605","n":"Bommasandra DMart","ci":"Bangalore","st":"Karnataka"},{"c":"5606","n":"Electronic City DMart","ci":"Bangalore","st":"Karnataka"},{"c":"5625","n":"Saroja Complex Banshankari BLR","ci":"Bangalore","st":"Karnataka"},{"c":"5601","n":"Siddapura DMart","ci":"Bangalore","st":"Karnataka"},{"c":"5721","n":"Sira Tumakuru Karnataka DMart","ci":"Bangalore","st":"Karnataka"},{"c":"5613","n":"Hongasandra Bangalore DMart","ci":"Bangalore","st":"Karnataka"}],"Dev":[{"c":"FRCX","n":"smart bazar-NEW DELHI-VASANT KUNJ-AMBIANCE MALL","ci":"New Delhi","st":"Delhi"},{"c":"FRDE","n":"FB-GHAZIABAD-SHIPRA MALL","ci":"Ghaziabad","st":"Uttar Pradesh"},{"c":"FRDH","n":"smart bazar-GHAZIABAD-OPULENT MALL-ED","ci":"Ghaziabad","st":"Uttar Pradesh"},{"c":"FRDI","n":"smart bazar-GHAZIABAD-MAHAGUN MALL-ED","ci":"Ghaziabad","st":"Uttar Pradesh"},{"c":"FRDJ","n":"smart bazar-GHAZIABAD-ADITYA MALL","ci":"Ghaziabad","st":"Uttar Pradesh"},{"c":"T913","n":"Jaipuria","ci":"Ghaziabad","st":"Uttar Pradesh"},{"c":"T915","n":"Signature Street","ci":"Ghaziabad","st":"Uttar Pradesh"},{"c":"TH89","n":"Aero Business Tower","ci":"Ghaziabad","st":"Uttar Pradesh"},{"c":"TH8K","n":"SMT UP  Signature Street G","ci":"Ghaziabad","st":"Uttar Pradesh"},{"c":"TI77","n":"Smart KW Delhi 6 Ghaziabad","ci":"Ghaziabad","st":"Uttar Pradesh"},{"c":"FRDF","n":"smart bazar-NOIDA-MALL OF INDIA","ci":"Noida","st":"Uttar Pradesh"},{"c":"FRDK","n":"smart bazar-NOIDA-GREAT INDIA PLACE","ci":"Noida","st":"Uttar Pradesh"},{"c":"FRDL","n":"smart bazar-NOIDA-LOGIX CITY CENTER","ci":"Noida","st":"Uttar Pradesh"},{"c":"FRDM","n":"smart bazar-NOIDA-GAUR CITY","ci":"Noida","st":"Uttar Pradesh"},{"c":"T1CU","n":"Smart Paras One 33-Noida","ci":"Noida","st":"Uttar Pradesh"},{"c":"TH86","n":"SMART Beta Plaza","ci":"Noida","st":"Uttar Pradesh"},{"c":"FRDB","n":"smart bazar-NEW DELHI-KALKA-JI","ci":"New Delhi","st":"Delhi"},{"c":"6205","n":"Crown Interiorz Mall","ci":"Faridabad","st":"Haryana"},{"c":"FRDD","n":"FARIDABAD-GRAND MALL","ci":"Faridabad","st":"Haryana"}],"Harsali":[{"c":"2620","n":"Swadeshi-Chunabhatti","ci":"Mumbai","st":"Maharashtra"},{"c":"3104","n":"RF SB Bandra","ci":"Mumbai","st":"Maharashtra"},{"c":"5518","n":"Merchandising Centre","ci":"Mumbai","st":"Maharashtra"},{"c":"6210","n":"Central City Mall","ci":"Mumbai","st":"Maharashtra"},{"c":"6217","n":"Acme Mall","ci":"Mumbai","st":"Maharashtra"},{"c":"6221","n":"D Victoria Mall","ci":"Mumbai","st":"Maharashtra"},{"c":"6731","n":"Super Gulmohar Plaza","ci":"Mumbai","st":"Maharashtra"},{"c":"FR03","n":"smart bazar-MUMBAI-MALAD-INFINITY MALL","ci":"Mumbai","st":"Maharashtra"},{"c":"T0II","n":"Smart T W Gardens Wadhwa Kandivali","ci":"Mumbai","st":"Maharashtra"},{"c":"T31K","n":"Smart Bazaar  Ivory Mall","ci":"Mumbai","st":"Maharashtra"},{"c":"TA10","n":"Kanchpara-Malad","ci":"Mumbai","st":"Maharashtra"},{"c":"TF14","n":"Centre Point","ci":"Mumbai","st":"Maharashtra"},{"c":"TQ21","n":"Santosh Nagar Goregaon","ci":"Mumbai","st":"Maharashtra"},{"c":"TZT7","n":"SB Smart Poonam Nagar Andheri","ci":"Mumbai","st":"Maharashtra"},{"c":"FR04","n":"smart bazar-MUMBAI-MATUNGA-ERA HOUSE","ci":"Mumbai","st":"Maharashtra"},{"c":"FR06","n":"smart bazar-MUMBAI-VILE PARLE-MONGIBAI ROAD","ci":"Mumbai","st":"Maharashtra"},{"c":"4052","n":"Andheri (E) Mumbai DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4045","n":"Virar (E) DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4021","n":"Kandivli Mahavir Nagar DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4018","n":"Vasai DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4036","n":"Dahisar DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4031","n":"Virar DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"FR10","n":"smart bazar-THANE-BHAYANDER-MAXUS MALL","ci":"Thane","st":"Maharashtra"},{"c":"FR16","n":"smart bazar-VASAI-DATTANI VILLAGE","ci":"Vasai","st":"Maharashtra"},{"c":"FR17","n":"VIRAR-YASHWANT BUILDING","ci":"Virar","st":"Maharashtra"}],"Kiran":[{"c":"6243","n":"Super Vidyaranyanpur","ci":"Bangalore","st":"Karnataka"},{"c":"FR40","n":"smart bazar-BENGALURU-ROYAL MEENAKSHI M","ci":"Bangalore","st":"Karnataka"},{"c":"FR42","n":"FB-BENGALURU-SOUL SPACE SPIRIT (CENTRAL)","ci":"Bangalore","st":"Karnataka"},{"c":"FR46","n":"smart bazar-BANGALURU-HEsmart bazarAL-MARUTHI AR","ci":"Bangalore","st":"Karnataka"},{"c":"T9UC","n":"SMT KR Hessarghatta Main Road Bangalore","ci":"Bangalore","st":"Karnataka"},{"c":"TAJ2","n":"Smart Kothanur","ci":"Bangalore","st":"Karnataka"},{"c":"TEC9","n":"Smart Akshay Nagar Bangalore","ci":"Bangalore","st":"Karnataka"},{"c":"TFY4","n":"Bhartiya City Thanisandra","ci":"Bangalore","st":"Karnataka"},{"c":"TMZ6","n":"Vignannagar","ci":"Bangalore","st":"Karnataka"},{"c":"TOD6","n":"Smart NRI Layout Bangalore","ci":"Bangalore","st":"Karnataka"},{"c":"TOD7","n":"Smart HSR Layout Bangalore","ci":"Bangalore","st":"Karnataka"},{"c":"TX88","n":"Monarch Serenity","ci":"Bangalore","st":"Karnataka"},{"c":"5616","n":"Ram Murthy Nagar Bangalore DMa","ci":"Bangalore","st":"Karnataka"},{"c":"5621","n":"KHB Yelahanka Bangalore","ci":"Bangalore","st":"Karnataka"},{"c":"5608","n":"Hennur Bangalore DMart","ci":"Bangalore","st":"Karnataka"},{"c":"5610","n":"Kanakpura Road Bangalore DMart","ci":"Bangalore","st":"Karnataka"},{"c":"5631","n":"Srigandha Bangalore DMart","ci":"Bangalore","st":"Karnataka"},{"c":"6302","n":"Hosur DMart","ci":"Bangalore","st":"Karnataka"},{"c":"5603","n":"SJR Sarjapur DMart","ci":"Bangalore","st":"Karnataka"},{"c":"5633","n":"Hoodi Bangalore DMart","ci":"Bangalore","st":"Karnataka"},{"c":"5604","n":"Garuda Mall DMart","ci":"Bangalore","st":"Karnataka"}],"Sagar":[{"c":"6239","n":"Reliance Mall, Dwarka","ci":"Delhi","st":"Delhi"},{"c":"TL30","n":"Vikaspuri","ci":"Delhi","st":"Delhi"},{"c":"TP06","n":"SMART Aggarwal Prestige Mall","ci":"Delhi","st":"Delhi"},{"c":"TU21","n":"G3S Mall Rohini","ci":"Delhi","st":"Delhi"},{"c":"TW11","n":"Plot No. 579, Shivaji Marg, Najafgarh","ci":"Delhi","st":"Delhi"},{"c":"FRCS","n":"smart bazar-NEW DELHI-ORCHARD ROAD MALL","ci":"New Delhi","st":"Delhi"},{"c":"FRCW","n":"FB-NEW DELHI-RAJENDRA PLACE MTRO STATION","ci":"New Delhi","st":"Delhi"},{"c":"FRDA","n":"smart bazar-NEW DELHI-V3S MALL","ci":"New Delhi","st":"Delhi"},{"c":"2364","n":"Jharsa Road","ci":"Gurgaon","st":"Haryana"},{"c":"6701","n":"DLF Mega Mall","ci":"Gurgaon","st":"Haryana"},{"c":"FRCO","n":"smart bazar-GURGAON-AMBI MALL","ci":"Gurgaon","st":"Haryana"},{"c":"FRCP","n":"smart bazar-GURGAON-OMAXE SOHNA ROAD-ED","ci":"Gurgaon","st":"Haryana"},{"c":"FRCQ","n":"smart bazar-GURGAON-SAHARA MALL","ci":"Gurgaon","st":"Haryana"},{"c":"T971","n":"Smart M3M Urbana Premium","ci":"Gurgaon","st":"Haryana"},{"c":"TC74","n":"Iris Broadway","ci":"Gurgaon","st":"Haryana"},{"c":"TIX3","n":"Aria Mall","ci":"Gurgaon","st":"Haryana"}],"Subhankar Sengupta":[{"c":"2951","n":"RRL Super Rosedale","ci":"Kolkata","st":"West Bengal"},{"c":"FRBT","n":"smart bazar-KOLKATA-BIRATI","ci":"Kolkata","st":"West Bengal"},{"c":"FRBU","n":"smart bazar-KOLKATA-DCN MALL-JESSORE ROAD","ci":"Kolkata","st":"West Bengal"},{"c":"FRBV","n":"smart bazar-KOLKATA-HILAND PARK-THE MET","ci":"Kolkata","st":"West Bengal"},{"c":"FRBW","n":"smart bazar-KOLKATA-JADAVPUR-ORBIT MALL","ci":"Kolkata","st":"West Bengal"},{"c":"FRCA","n":"smart bazar-KOLKATA-RASHBEHARI AVENUE","ci":"Kolkata","st":"West Bengal"},{"c":"FRCB","n":"smart bazar-KOLKATA-SALT LAKE","ci":"Kolkata","st":"West Bengal"},{"c":"FRCC","n":"smart bazar-KOLKATA-SEALDAH","ci":"Kolkata","st":"West Bengal"},{"c":"FRCF","n":"KOLKATA-V.I.P. ROAD","ci":"Kolkata","st":"West Bengal"},{"c":"FRCG","n":"smart bazar-KOLKATA-WOOD SQUARE MALL-PARGANAS","ci":"Kolkata","st":"West Bengal"},{"c":"FRLF","n":"smart bazar-KOLKATA-KHIDERPOR","ci":"Kolkata","st":"West Bengal"},{"c":"T1C1","n":"SMT WB  Shyamnagar K","ci":"Kolkata","st":"West Bengal"},{"c":"T1NA","n":"Smart South  Planox Mall","ci":"Kolkata","st":"West Bengal"},{"c":"T60N","n":"SMT WB Greenfield C","ci":"Kolkata","st":"West Bengal"},{"c":"TH92","n":"RS Newtown Plaza Kolkata","ci":"Kolkata","st":"West Bengal"},{"c":"TIT6","n":"RRL Smart Ghosh Para Road B","ci":"Kolkata","st":"West Bengal"},{"c":"TMM5","n":"Smart Behala","ci":"Kolkata","st":"West Bengal"},{"c":"TMM6","n":"Smart Garia","ci":"Kolkata","st":"West Bengal"},{"c":"TMZ5","n":"SMART Madhyamgram","ci":"Kolkata","st":"West Bengal"},{"c":"TR85","n":"Oracle Realmark Narendrapur","ci":"Kolkata","st":"West Bengal"}],"Jitendra":[{"c":"6221","n":"D Victoria Mall","ci":"Mumbai","st":"Maharashtra"},{"c":"6731","n":"Super Gulmohar Plaza","ci":"Mumbai","st":"Maharashtra"},{"c":"4045","n":"Virar (E) DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4021","n":"Kandivli Mahavir Nagar DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4018","n":"Vasai DMart","ci":"Vasai","st":"Maharashtra"},{"c":"4036","n":"Dahisar DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4031","n":"Virar (West) Dmart","ci":"Virar","st":"Maharashtra"},{"c":"FR03","n":"smart bazar-MUMBAI-MALAD-INFINITY MALL","ci":"Mumbai","st":"Maharashtra"},{"c":"TI76","n":"Chandra Mall","ci":"Nalasopara","st":"Maharashtra"},{"c":"3104","n":"RF SB Bandra","ci":"Mumbai","st":"Maharashtra"},{"c":"TQ59","n":"Smart GoodLife Boisar","ci":"Boisar","st":"Maharashtra"},{"c":"FR16","n":"smart bazar-VASAI-DATTANI VILLAGE","ci":"Vasai","st":"Maharashtra"},{"c":"FR17","n":"VIRAR-YASHWANT BUILDING","ci":"Virar","st":"Maharashtra"},{"c":"T0II","n":"Smart T W Gardens Wadhwa Kandivali","ci":"Mumbai","st":"Maharashtra"},{"c":"T31K","n":"Smart Bazaar Ivory Mall","ci":"Mumbai","st":"Maharashtra"},{"c":"TA10","n":"Kanchpara-Malad","ci":"Mumbai","st":"Maharashtra"},{"c":"TQ21","n":"Santosh Nagar Goregaon","ci":"Mumbai","st":"Maharashtra"},{"c":"4052","n":"Andheri (E) Mumbai DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"FR06","n":"smart bazar-MUMBAI-VILE PARLE-MONGIBAI ROAD","ci":"Mumbai","st":"Maharashtra"},{"c":"FR11","n":"smart bazar-THANE-DAHISAR-THAKUR MALL","ci":"Thane","st":"Maharashtra"},{"c":"TZT7","n":"SB Smart Poonam Nagar Andheri","ci":"Mumbai","st":"Maharashtra"}],"Satish":[{"c":"6217","n":"Acme Mall","ci":"Mumbai","st":"Maharashtra"},{"c":"4019","n":"Mulund DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4067","n":"Chembur Central Mumbai DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4017","n":"Thane Garden Estate DMart","ci":"Thane","st":"Maharashtra"},{"c":"4040","n":"Kanjurmarg Mumbai DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"TOJ6","n":"Smart R City Mall Ghatkopar","ci":"Mumbai","st":"Maharashtra"},{"c":"TAFW","n":"Smart R Mall Thane","ci":"Thane","st":"Maharashtra"},{"c":"TOM0","n":"Korum Mall","ci":"Thane","st":"Maharashtra"},{"c":"TZ6V","n":"SMT MH Concept A","ci":"Thane","st":"Maharashtra"},{"c":"TZ6W","n":"Smart Thanekar Palasia","ci":"Thane","st":"Maharashtra"},{"c":"TQ60","n":"Vertex Khadapada","ci":"Thane","st":"Maharashtra"},{"c":"TCM3","n":"Smart Sunteck Airoli","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"FR15","n":"smart bazar-THANE-VIVA CITY MALL","ci":"Thane","st":"Maharashtra"},{"c":"FR10","n":"smart bazar-THANE-BHAYANDER-MAXUS MALL","ci":"Thane","st":"Maharashtra"},{"c":"TAJF","n":"Smart Badlapur West","ci":"Thane","st":"Maharashtra"},{"c":"FR14","n":"smart bazar-THANE-KALYAN-NETIVALI VILLA","ci":"Thane","st":"Maharashtra"},{"c":"6220","n":"Phoenix Market City","ci":"Mumbai","st":"Maharashtra"}],"Suman":[{"c":"TMZ9","n":"Nisarg Greens Ambernath","ci":"Thane","st":"Maharashtra"},{"c":"T188","n":"SMT MUM Dombivali (W)","ci":"Thane","st":"Maharashtra"},{"c":"TAJF","n":"Smart Badlapur West","ci":"Thane","st":"Maharashtra"},{"c":"FR00","n":"smart bazar-DOMBIVILI-LODHA EXPERIA MALL","ci":"Thane","st":"Maharashtra"},{"c":"4026","n":"Bhopar Dombivli DMart","ci":"Mumbai","st":"Maharashtra"},{"c":"4020","n":"New Panvel DMart","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"4048","n":"Panvel Highway DMart","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"4016","n":"Seawoods DMart","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"4022","n":"Airoli DMart","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"FR07","n":"smart bazar-NAVI MUMBAI-PANVEL-ORION MA","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"FR08","n":"smart bazar-NAVI MUMBAI-SEAWOODS","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"FR22","n":"HYPERCITY-NAVI MUMBAI-INORBIT MALLS","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"TFP9","n":"Om Namah Shivay Karanjade","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"TM95","n":"Sai Krupa Kharghar","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"TCM3","n":"Smart Sunteck Airoli","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"6731","n":"Super Gulmohar Plaza","ci":"Mumbai","st":"Maharashtra"},{"c":"2620","n":"Swadeshi-Chunabhatti","ci":"Mumbai","st":"Maharashtra"},{"c":"FR04","n":"smart bazar-MUMBAI-MATUNGA-ERA HOUSE","ci":"Mumbai","st":"Maharashtra"},{"c":"3104","n":"RF SB Bandra","ci":"Mumbai","st":"Maharashtra"},{"c":"6210","n":"Central City Mall","ci":"Mumbai","st":"Maharashtra"},{"c":"TF14","n":"Centre Point","ci":"Navi Mumbai","st":"Maharashtra"},{"c":"FR11","n":"smart bazar-THANE-DAHISAR-THAKUR MALL","ci":"Thane","st":"Maharashtra"},{"c":"FR14","n":"smart bazar-THANE-KALYAN-NETIVALI VILLA","ci":"Thane","st":"Maharashtra"}]};
+var photos = [];
+function init() {
+  var now = new Date();
+  document.getElementById('D_date').value = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate());
+  document.getElementById('D_time').value = pad(now.getHours()) + ':' + pad(now.getMinutes());
+  renderPhotos();
+  document.getElementById('D_merc').onchange = onMerc;
+  document.getElementById('D_store').onchange = onStore;
+  document.getElementById('D_vis').onchange = function() { document.getElementById('vof').style.display = this.value === 'Others' ? 'block' : 'none'; };
+  document.getElementById('ci').onchange = function() { addPhoto(this); };
+  document.getElementById('gi').onchange = function() { addPhoto(this); };
+  document.getElementById('subBtn').onclick = doSubmit;
+  doGPS();
+}
+function pad(n) { return n < 10 ? '0'+n : ''+n; }
+function doGPS() {
+  var hint = document.getElementById('gps_hint');
+  hint.textContent = 'Getting location...';
+  hint.style.color = '#888';
+  if (!navigator.geolocation) { hint.textContent = 'GPS not supported.'; return; }
+  navigator.geolocation.getCurrentPosition(function(p) {
+    var lat = p.coords.latitude.toFixed(6);
+    var lng = p.coords.longitude.toFixed(6);
+    document.getElementById('D_lat').value = lat;
+    document.getElementById('D_lng').value = lng;
+    document.getElementById('D_loc').value = lat + ', ' + lng;
+    hint.textContent = 'Location captured (plus or minus ' + Math.round(p.coords.accuracy) + 'm)';
+    hint.style.color = '#1a8a5a';
+  }, function(err) {
+    document.getElementById('D_lat').value = '';
+    document.getElementById('D_lng').value = '';
+    document.getElementById('D_loc').value = '';
+    if (err.code === 1) hint.textContent = 'Permission denied. Allow location in browser settings then tap Refresh';
+    else if (err.code === 2) hint.textContent = 'GPS unavailable. Move to open area and tap Refresh';
+    else hint.textContent = 'Timed out. Tap Refresh to retry.';
+    hint.style.color = '#c4351a';
+  }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
+}
+function onMerc() {
+  var val = this.value;
+  var isO = val === 'Others';
+  document.getElementById('mof').style.display = isO ? 'block' : 'none';
+  document.getElementById('csof').style.display = isO ? 'block' : 'none';
+  var sel = document.getElementById('D_store');
+  sel.innerHTML = '';
+  sel.add(new Option(isO ? '-- Enter below --' : '-- Select store --', ''));
+  document.getElementById('D_code').value = '';
+  document.getElementById('D_city').value = '';
+  document.getElementById('D_state').value = '';
+  document.getElementById('sof').style.display = 'none';
+  if (!isO && S[val]) {
+    var grp = {};
+    S[val].forEach(function(s) {
+      var c = s.ci || 'Other';
+      if (!grp[c]) grp[c] = [];
+      grp[c].push(s);
+    });
+    Object.keys(grp).sort().forEach(function(city) {
+      var og = document.createElement('optgroup');
+      og.label = city;
+      grp[city].forEach(function(s) {
+        og.appendChild(new Option(s.n + ' (' + s.c + ')', JSON.stringify(s)));
+      });
+      sel.appendChild(og);
+    });
+  }
+  sel.add(new Option('Others', 'OTHERS'));
+}
+function onStore() {
+  var val = this.value;
+  var isO = val === 'OTHERS';
+  document.getElementById('sof').style.display = isO ? 'block' : 'none';
+  if (isO) {
+    document.getElementById('D_code').value = '';
+    document.getElementById('D_city').value = '';
+    document.getElementById('D_state').value = '';
+    document.getElementById('csof').style.display = 'block';
+  } else if (val) {
+    try {
+      var s = JSON.parse(val);
+      document.getElementById('D_code').value  = s.c  || '';
+      document.getElementById('D_city').value  = s.ci || '';
+      document.getElementById('D_state').value = s.st || '';
+      document.getElementById('csof').style.display = 'none';
+    } catch(e) {}
+  }
+}
+function setYN(field, val) {
+  if (field === 'stock') {
+    document.getElementById('sa_y').className = 'yn-btn' + (val==='Yes'?' Y':'');
+    document.getElementById('sa_n').className = 'yn-btn' + (val==='No'?' N':'');
+    document.getElementById('D_stock').value = val;
+    document.getElementById('sohC').style.display = val==='Yes' ? 'block' : 'none';
+  } else if (field === 'price') {
+    document.getElementById('pr_y').className = 'yn-btn' + (val==='Yes'?' Y':'');
+    document.getElementById('pr_n').className = 'yn-btn' + (val==='No'?' N':'');
+    document.getElementById('D_price').value = val;
+  } else if (field === 'facing') {
+    document.getElementById('fc_y').className = 'yn-btn' + (val==='Yes'?' Y':'');
+    document.getElementById('fc_n').className = 'yn-btn' + (val==='No'?' N':'');
+    document.getElementById('D_facing').value = val;
+    document.getElementById('facingNumF').style.display = val==='No' ? 'block' : 'none';
+  } else if (field === 'adj') {
+    document.getElementById('adj_y').className = 'yn-btn' + (val==='Yes'?' Y':'');
+    document.getElementById('adj_n').className = 'yn-btn' + (val==='No'?' N':'');
+    document.getElementById('D_adj').value = val;
+  }
+}
+function addPhoto(input) {
+  var file = input.files[0];
+  if (!file) return;
+  if (photos.length >= 4) { showErr('Max 4 photos.'); return; }
+  if (file.size > 10*1024*1024) { showErr('Photo too large (max 10MB).'); return; }
+  var r = new FileReader();
+  r.onload = function(e) { photos.push({ d: e.target.result, n: file.name }); renderPhotos(); };
+  r.readAsDataURL(file);
+  input.value = '';
+}
+function removePhoto(i) { photos.splice(i, 1); renderPhotos(); }
+function renderPhotos() {
+  var g = document.getElementById('pg');
+  g.innerHTML = '';
+  for (var i = 0; i < 4; i++) {
+    var slot = document.createElement('div');
+    if (photos[i]) {
+      slot.className = 'pslot ok';
+      var img = document.createElement('img');
+      img.src = photos[i].d;
+      slot.appendChild(img);
+      var xb = document.createElement('button');
+      xb.className = 'xi';
+      xb.innerHTML = 'X';
+      xb.setAttribute('data-i', i);
+      xb.onclick = function(e) { e.stopPropagation(); removePhoto(+this.getAttribute('data-i')); };
+      slot.appendChild(xb);
+    } else {
+      slot.className = 'pslot';
+      slot.innerHTML = '<div style="font-size:24px">+</div><div style="font-size:12px;color:#aaa;margin-top:4px">Photo '+(i+1)+'</div>';
+      slot.onclick = (function(){ return function(){ document.getElementById('ci').click(); }; })();
+    }
+    g.appendChild(slot);
+  }
+  document.getElementById('pc').textContent = photos.length + ' of 4 photos added';
+}
+function gv(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+function gn(id) { return parseInt(gv(id)) || 0; }
+function showErr(msg) {
+  var e = document.getElementById('em');
+  e.textContent = msg;
+  e.style.display = 'block';
+  e.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(function() { e.style.display = 'none'; }, 6000);
+}
+function doSubmit() {
+  var merc  = gv('D_merc');
+  var mf    = merc === 'Others' ? gv('D_mo') : merc;
+  var stVal = gv('D_store');
+  var isOS  = stVal === 'OTHERS';
+  var isMO  = merc === 'Others';
+  var vis   = gv('D_vis');
+  var visF  = vis === 'Others' ? gv('D_viso') : vis;
+  var cityF = (isOS||isMO) ? gv('D_cito') : gv('D_city');
+  var staF  = (isOS||isMO) ? gv('D_stao') : gv('D_state');
+  if (!mf)             return showErr('Please select your name.');
+  if (!stVal)          return showErr('Please select a store.');
+  if (!gv('D_stock'))  return showErr('Please select if stock is available.');
+  if (!gv('D_price'))  return showErr('Please select if price is correct.');
+  if (photos.length<1) return showErr('At least 1 photo is required.');
+  if (!visF)           return showErr('Please select shelf visibility.');
+  if (!gv('D_facing')) return showErr('Please answer the 3 facing digestive question.');
+  if (gv('D_facing')==='No' && !gv('D_facingNum')) return showErr('Please enter the number of facings.');
+  if (!gv('D_adj'))    return showErr('Please answer if digestive and jeera are next to each other.');
+  if (!gv('D_comp'))   return showErr('Please select compliance level.');
+  var sn, sc;
+  if (isOS) { sn = gv('D_so')||'Others'; sc = 'OTHER'; }
+  else { try { var s=JSON.parse(stVal); sn=s.n; sc=s.c; } catch(e) { sn=stVal; sc=''; } }
+  var payload = {
+    date: gv('D_date'), time: gv('D_time'),
+    lat: gv('D_lat'), lng: gv('D_lng'),
+    merchandiser: mf, storeName: sn, storeCode: sc,
+    city: cityF, state: staF,
+    mgrName: gv('D_mgn'), mgrContact: gv('D_mgc'),
+    stockAvailable: gv('D_stock'),
+    soh_digestive: gn('D_s1'), soh_jeera: gn('D_s2'),
+    soh_choco: gn('D_s3'), soh_assorted: gn('D_s4'),
+    priceCorrect: gv('D_price'),
+    photos: photos.map(function(p){ return {fileData:p.d, fileName:p.n}; }),
+    visibility: visF,
+    facing3: gv('D_facing'),
+    facingCount: gv('D_facing')==='No' ? gn('D_facingNum') : 3,
+    digJeeraAdjacent: gv('D_adj'),
+    compliance: gv('D_comp'), remarks: gv('D_rem')
+  };
+  document.getElementById('ov').className = 'ov on';
+  document.getElementById('subBtn').disabled = true;
+  fetch(URL, { method: 'POST', body: JSON.stringify(payload), mode: 'no-cors' })
+    .then(function(){
+      document.getElementById('ov').className = 'ov';
+      document.getElementById('frm').style.display = 'none';
+      document.querySelector('.footer').style.display = 'none';
+      document.getElementById('suc').style.display = 'block';
+      document.getElementById('sm').textContent = 'Saved for ' + sn + '. Check your Google Sheet to confirm.';
+    })
+    .catch(function(){
+      document.getElementById('ov').className = 'ov';
+      document.getElementById('subBtn').disabled = false;
+      showErr('Network error. Check connection and try again.');
+    });
+}
+function doReset() {
+  document.getElementById('frm').style.display = 'block';
+  document.getElementById('suc').style.display = 'none';
+  document.querySelector('.footer').style.display = 'block';
+  document.getElementById('subBtn').disabled = false;
+  var inputs = document.querySelectorAll('input:not([readonly]):not([type=hidden])');
+  for (var i=0; i<inputs.length; i++) inputs[i].value = '';
+  var selects = document.querySelectorAll('select');
+  for (var i=0; i<selects.length; i++) selects[i].selectedIndex = 0;
+  ['D_code','D_city','D_state','D_stock','D_price','D_facing','D_adj'].forEach(function(id){ document.getElementById(id).value=''; });
+  ['sa_y','sa_n','pr_y','pr_n','fc_y','fc_n','adj_y','adj_n'].forEach(function(id){ document.getElementById(id).className='yn-btn'; });
+  ['mof','sof','vof','csof','facingNumF'].forEach(function(id){ document.getElementById(id).style.display='none'; });
+  document.getElementById('sohC').style.display = 'none';
+  document.getElementById('D_store').innerHTML = '<option value="">-- Select name first --</option>';
+  photos = [];
+  renderPhotos();
+  init();
+  window.scrollTo(0,0);
+}
+window.onload = init;
+</script>
+</body>
+</html>
